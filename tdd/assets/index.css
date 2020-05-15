@@ -1,0 +1,134 @@
+
+        html,
+        body,
+        #app {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: transparent;
+            background: transparent;
+        }
+
+        html {
+            background: url(./loading.gif) no-repeat center center fixed;
+            -webkit-background-size: center;
+            -moz-background-size: center;
+            -o-background-size: center;
+            background-size: center;
+            overflow-y: hidden;
+        }
+
+        .fe-app {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+
+            background: #fafafa;
+            color: rgba(0, 0, 0, .87);
+
+            overflow: hidden;
+        }
+
+        .fe-toolbar {
+            align-items: center;
+            display: flex;
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            z-index: 9999;
+            height: 48px;
+            padding: 0 16px;
+            background-color: #f0f0f0;
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12);
+        }
+
+        .fe-toolbar .ivu-btn {
+            margin-left: 8px;
+        }
+
+        .fe-content {
+            position: absolute;
+            left: 0;
+            top: 48px;
+            right: 0;
+            bottom: 0;
+
+            /* transition: .2s cubic-bezier(.4,0,.2,1); */
+            padding: 12px;
+
+            overflow-y: auto;
+
+        }
+
+        @media (min-width:600px) {
+            .fe-content {
+                margin: 0 0 40px 20px;
+                border-bottom: 2px dotted #eee;
+                border-left: 2px dotted #eee;
+            }
+        }
+
+        .RouterView {
+            display: block;
+        }
+
+        * {
+            -webkit-user-select: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #DDD
+        }
+
+        .ivu-row {
+            padding: 12px;
+        }
+
+        .ivu-form-item {
+            margin-bottom: 16px;
+        }
+
+        .ivu-form-item-error-tip {
+            padding-top: 0;
+        }
+
+        .ivu-form .ivu-form-item-label {
+            font-size: 14px;
+            vertical-align: middle;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .ivu-switch-large {
+            margin-top: 6px;
+        }
+
+        .ag-center-cols-viewport {
+            overflow-x: hidden !important;
+        }
+
+        .ag-theme-balham ::-webkit-scrollbar-thumb {
+            background-color: #999 !important;
+        }
+
+        .ag-theme-balham .ag-ltr .ag-cell {
+            border-right: 1px solid #ddd;
+        }
+
+        .ag-theme-material .ag-header-group-cell,
+        .ag-theme-material .ag-header-cell,
+        .ag-theme-material .ag-ltr .ag-cell {
+            border: 1px solid #eee;
+        }

@@ -1,0 +1,9 @@
+package-lock.json
+node_modules/
+.cache/
+.config/
+.npm/
+.viminfo
+.vscode-server/
+.wget-hsts
+*.swp

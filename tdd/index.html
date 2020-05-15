@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>BDD</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/index.css">
+    <script>
+        NodeList.prototype.indexOf = Array.prototype.indexOf; // for IE11
+        if (window.global) {
+            var win = require('nw.gui').Window.get();
+            if (global.token.uid === 'x041007')
+                win.showDevTools();
+        }
+    </script>
+
+    <link href="/build/common/base.css" rel="stylesheet">
+    <script type="text/javascript" src="/build/common/base.js"></script>
+    <script type="text/javascript" src="/build/common/vueEdit-babel.js"></script>
+    <!-- <script type="text/javascript" src="../../build/common/babel.min.js"></script> -->
+
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
+    <script src="/node_modules/vue-router/dist/vue-router.min.js"></script>
+    <script src="/node_modules/http-vue-loader/src/httpVueLoader.js"></script>
+    <script src="/node_modules/vuex/dist/vuex.min.js"></script>
+
+    <link rel="stylesheet" href="/node_modules/iview/dist/styles/iview.css">
+    <script src="/node_modules/iview/dist/iview.min.js"></script>
+    <script src="/node_modules/@form-create/iview/dist/form-create.min.js"></script>
+    <script src="/node_modules/vue-i18n/dist/vue-i18n.js"></script>
+    <script src="/node_modules/iview/dist/locale/en-US.js"></script>
+    <script src="/node_modules/iview/dist/locale/zh-TW.js"></script>
+
+    <script defer="defer" src="/assets/js/Lodop.w.js" onload="console.log('Lodop.js loaded.');"
+        type="text/javascript"></script>
+
+    <!-- <script src="../node_modules/ag-grid-enterprise/dist/ag-grid-enterprise.min.noStyle.js"></script>
+    <script src="../node_modules/ag-grid-vue/dist/ag-grid-vue.umd.min.js"></script>
+    <link rel="stylesheet" href="../node_modules/ag-grid-community/dist/styles/ag-grid.css">
+    <link rel="stylesheet" href="../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css"> -->
+</head>
+
+<body>
+    <div class="fe-app" id="app" v-cloak>
+        <div class="fe-toolbar">
+            <i-button type="primary" shape="circle" icon="ios-search" @click="change"></i-button>
+            <br>
+            <i-button type="warning" loading onclick="$.Toast.success('batch',this.innerText);">loading....</i-button>
+        </div>
+
+        <div class="fe-content">
+            <keep-alive>
+                <router-view class="RouterView" v-if="$route.meta.keepAlive"></router-view>
+            </keep-alive>
+            <router-view class="RouterView" v-if="!$route.meta.keepAlive"></router-view>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    axios.defaults.baseURL = 'https://a.feg.com.tw';
+    axios.defaults.withCredentials = true;
+    axios.defaults.retry = 2;
+    axios.defaults.retryDelay = 2000;
+    console.dir(axios.defaults);
+
+    const router = new VueRouter({
+        routes: [{
+            path: '/',
+            component: httpVueLoader('./pages/index.vue?_t_=' + (new Date().getTime())),
+            name: 'home',
+            meta: { keepAlive: true },
+            props: true
+        },
+        { path: '*', redirect: "/" }],
+        scrollBehavior(to, from, savedPosition) {
+            return { x: 0, y: 0 };
+        }
+    })
+
+    Vue.locale = () => { };
+
+    const messages = {
+        en: Object.assign({
+            demo: {
+                message: 'hello',
+                start: 'start'
+            },
+        }, iview.langs['en-US']),
+        zh: Object.assign({
+            demo: {
+                message: '你好',
+                start: '起始时间'
+            },
+        }, iview.langs['zh-TW'])
+    };
+
+    const i18n = new VueI18n({
+        locale: 'en',
+        messages
+    })
+
+    const app = new Vue({
+        el: '#app', i18n: i18n,
+        store: new Vuex.Store({
+            state: {
+                count: 0,
+            },
+            mutations: {
+                increment(state) {
+                    state.count++
+                }
+            }
+        }),
+        components: {
+            // AgGridVue: window["ag-grid-vue"].AgGridVue
+        },
+        data: {
+
+        },
+        router: router,
+        methods: {
+            change() {
+                this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
+            }
+        },
+        created: function () {
+            this.$store.commit('increment');
+            this.$router.beforeEach((to, from, next) => {
+                next();
+            });
+        },
+        mounted: function () {
+            console.dir(this.$store.state.count);
+            this.$router
+                .push({ name: 'home', query: { r: (new Date()).getTime() } })
+                .catch(data => {
+                    console.log(data)
+                });
+        },
+    })
+</script>
+
+</html>
