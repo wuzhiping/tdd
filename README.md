@@ -1,8 +1,7 @@
 # .Vue
 
-[https://code.visualstudio.com/](VS Code)
-
-## npm 相关命令
+(VS Code)
+https://code.visualstudio.com
 
 # 安装工程依赖
 npm install
