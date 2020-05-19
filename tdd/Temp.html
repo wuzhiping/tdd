@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>T1</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/index.css">
+    <script>
+        NodeList.prototype.indexOf = Array.prototype.indexOf; // for IE11
+        
+    </script>
+
+    <link href="/build/common/base.css" rel="stylesheet">
+    <script type="text/javascript" src="/build/common/base.js"></script>
+    <script type="text/javascript" src="/build/common/vueEdit-babel.js"></script>
+    <script type="text/javascript" src="/build/common/babel.min.js"></script>
+    <script src="/node_modules/regenerator-runtime/runtime.js"></script>
+
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
+    <script src="/node_modules/vue-router/dist/vue-router.min.js"></script>
+    <script src="/node_modules/http-vue-loader/src/httpVueLoader.js"></script>
+    <script src="/node_modules/vuex/dist/vuex.min.js"></script>
+
+    <link rel="stylesheet" href="/node_modules/iview/dist/styles/iview.css">
+    <script src="/node_modules/iview/dist/iview.min.js"></script>
+    <script src="/node_modules/@form-create/iview/dist/form-create.min.js"></script>
+    <script src="/node_modules/vue-i18n/dist/vue-i18n.js"></script>
+    <script src="/node_modules/iview/dist/locale/en-US.js"></script>
+    <script src="/node_modules/iview/dist/locale/zh-TW.js"></script>
+
+    <!-- <script defer="defer" src="../../assets/js/Lodop.w.js" onload="console.log('Lodop.js loaded.');" type="text/javascript"></script> -->
+
+    <script src="/node_modules/ag-grid-enterprise/dist/ag-grid-enterprise.min.noStyle.js"></script>
+    <script src="/node_modules/ag-grid-vue/dist/ag-grid-vue.umd.min.js"></script>
+    <link rel="stylesheet" href="/node_modules/ag-grid-community/dist/styles/ag-grid.css">
+    <link rel="stylesheet" href="/node_modules/ag-grid-community/dist/styles/ag-theme-balham.css">
+</head>
+
+<body>
+    <div class="fe-app" id="app" v-cloak>
+        <div class="fe-toolbar" :style="{ 'display': $store.state.nodeId ? 'none' : 'flex' }">
+            <i-button type="primary" shape="circle" icon="ios-search" @click="change">{{$route.path}}</i-button>
+            <br>
+            <i-button type="warning" loading onclick="$.Toast.success('batch',this.innerText);">{{$store.state.nodeId}} loading....</i-button>
+        </div>
+
+        <div class="fe-content" :style="{ 'top': $store.state.nodeId ? '2px' : '52px' }">
+            <keep-alive>
+                <router-view class="RouterView" v-if="$route.meta.keepAlive"></router-view>
+            </keep-alive>
+            <router-view class="RouterView" v-if="!$route.meta.keepAlive"></router-view>
+        </div>
+    </div>
+</body>
+
+<script type="text/babel">
+    //表单处理器
+    function isValid() {
+        console.log('validating ...');
+        //alert('something wrong -_-');
+        return app.isValid();
+    }
+
+    function getData() {
+        console.log('Invoke getData...');
+        return app.getData();
+    }
+
+
+    axios.defaults.baseURL = 'https://a.feg.com.tw';
+    axios.defaults.withCredentials = false; //COR
+    axios.defaults.retry = 2;
+    axios.defaults.retryDelay = 2000;
+
+    console.dir(axios.defaults);
+
+    const router = new VueRouter({
+        routes: [{
+            path: '/',
+            component: httpVueLoader('./pages/T1.vue?_t_=' + (new Date().getTime())),
+            name: 'home',
+            meta: {
+                keepAlive: true
+            },
+            props: true
+        }, {
+            path: '*',
+            redirect: "/"
+        }, {
+            path: '/list',
+            component: httpVueLoader('./pages/list.vue?_t_=' + (new Date().getTime())),
+            name: 'list',
+            meta: {
+                keepAlive: true
+            },
+            props: true
+        }, ],
+        scrollBehavior(to, from, savedPosition) {
+            return {
+                x: 0,
+                y: 0
+            };
+        }
+    })
+
+    Vue.locale = function(){};
+
+    const messages = {
+        en: Object.assign({
+            demo: {
+                message: 'hello',
+                start: 'start'
+            },
+        }, iview.langs['en-US']),
+        zh: Object.assign({
+            demo: {
+                message: '你好',
+                start: '起始时间'
+            },
+        }, iview.langs['zh-TW'])
+    };
+
+    const i18n = new VueI18n({
+        locale: 'en',
+        messages
+    })
+
+    const app = new Vue({
+        el: '#app',
+        i18n: i18n,
+        store: new Vuex.Store({
+            state: {
+                isValid: false,
+                error: "",
+                data: {},
+
+                bizId: $.getParam("bizId"),
+                nodeId: $.getParam("nodeId"),
+                defId: $.getParam("defId"),
+                taskId: $.getParam("taskId"),
+                instId: $.getParam("id")
+            },
+            mutations: {
+                error(state, error) {
+                    state.error = error || "";
+                },
+                write(state, payload) {
+                    state.isValid = payload.isValid;
+                    state.data = payload.data;
+
+                    state.data.bizId = state.bizId || payload.data.bizId,
+                        state.data.nodeId = state.nodeId,
+                        state.data.defId = state.defId,
+                        state.data.taskId = state.taskId,
+                        state.data.instId = state.instId
+                },
+                reset(state) {
+                    state.isValid = false;
+                    state.error = "";
+                    state.data = {
+                        bizId: state.bizId,
+                        nodeId: state.nodeId,
+                        defId: state.defId,
+                        taskId: state.taskId,
+                        instId: state.instId,
+
+                        variables: {},
+                        log: {},
+                        opinion: '', //default: button name
+                        opinions: []
+                    }
+
+                }
+            }
+        }),
+        components: {
+            //  AgGridVue: window["ag-grid-vue"].AgGridVue
+        },
+        data: {
+
+        },
+        router: router,
+        methods: {
+            isValid() {
+                if (!this.$store.state.isValid)
+                    $.Toast.error(this.$store.state.error, " [ Valid Failed... ]");
+                return this.$store.state.isValid;
+            },
+            getData() {
+                return this.$store.state.data;
+            },
+            change() {
+                this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
+            },
+        },
+        created: async function() {
+            const res = await axios.get('/oauth2/abc')
+            console.log(res)
+            const res2 = await axios.get('/oauth2/abc')
+            console.log(res2)
+
+            var that = this;
+            this.$router.beforeEach(function(to, from, next){
+                console.dir(from.path + " -> " + to.path)
+                that.$store.commit('reset');
+                next();
+            })
+            // this.$router.beforeEach((to, from, next) => {
+            //     console.dir(from.path + " -> " + to.path)
+            //     this.$store.commit('reset');
+            //     next();
+            // });
+        },
+        mounted: function() {
+            this.$router
+                .push({
+                    name: 'home',
+                    query: {
+                        r: (new Date()).getTime()
+                    }
+                })
+                //.catch(data => {
+                //    console.log(data)
+                //});
+        },
+    })
+</script>
+<style>
+    
+</style>
+
+</html>

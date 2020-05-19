@@ -1,15 +1,11 @@
 
+
         html,
         body,
         #app {
             height: 100%;
             margin: 0;
             padding: 0;
-        }
-
-        body {
-            background-color: transparent;
-            background: transparent;
         }
 
         html {
@@ -28,7 +24,7 @@
             right: 0;
             bottom: 0;
 
-            background: #fafafa;
+            background: #FEFEFE;
             color: rgba(0, 0, 0, .87);
 
             overflow: hidden;
@@ -55,12 +51,12 @@
         .fe-content {
             position: absolute;
             left: 0;
-            top: 48px;
+            top: 52px;
             right: 0;
             bottom: 0;
 
             /* transition: .2s cubic-bezier(.4,0,.2,1); */
-            padding: 12px;
+            padding: 0 6px;
 
             overflow-y: auto;
 
@@ -68,13 +64,21 @@
 
         @media (min-width:600px) {
             .fe-content {
-                margin: 0 0 40px 20px;
-                border-bottom: 2px dotted #eee;
-                border-left: 2px dotted #eee;
+                margin: 0 0 20px 16px;
+                border-bottom: 2px dotted #Fcfcfc;
+                border-left: 2px dotted #Fcfcfc;
+                padding:0 48px 0 6px;
             }
         }
 
+        body {
+            background-color: transparent;
+            background: transparent;
+        }
+
         .RouterView {
+            position:relative;
+            height: 100%;
             display: block;
         }
 
@@ -83,7 +87,8 @@
         }
 
         ::-webkit-scrollbar {
-            width: 10px
+            width: 10px;
+            height:10px;
         }
 
         ::-webkit-scrollbar-thumb {
@@ -94,7 +99,7 @@
             padding: 12px;
         }
 
-        .ivu-form-item {
+        /* .ivu-form-item {
             margin-bottom: 16px;
         }
 
@@ -113,22 +118,33 @@
 
         .ivu-switch-large {
             margin-top: 6px;
-        }
+        } */
 
         .ag-center-cols-viewport {
             overflow-x: hidden !important;
         }
 
         .ag-theme-balham ::-webkit-scrollbar-thumb {
-            background-color: #999 !important;
+            background-color: #A99 !important;
         }
 
         .ag-theme-balham .ag-ltr .ag-cell {
-            border-right: 1px solid #ddd;
+            border-right: 1px solid #ddd!important;
         }
 
+        .ag-theme-balham .ag-ltr .ag-cell {
+            border-right: 1px solid #ddd!important;
+        }
+  
         .ag-theme-material .ag-header-group-cell,
         .ag-theme-material .ag-header-cell,
         .ag-theme-material .ag-ltr .ag-cell {
-            border: 1px solid #eee;
+            border: 1px solid #eee!important;
+        }  
+        .cell-wrap-text {
+            white-space: normal !important;
         }
+  
+        .ag-body-viewport .ag-center-cols-clipper { min-height:50%!important; }
+        .ag-root-wrapper-body.ag-layout-normal { height:auto!important; }
+        .ag-root.ag-layout-normal { height:auto!important; }
