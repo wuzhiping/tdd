@@ -1,8 +1,6 @@
 <template>
-  <div style="height:100%;">
-    <div style=" height: calc(60% - 5px);">
       <ag-grid-vue
-        style="zoom:115%;"
+        style="zoom:115%;height: calc(100% - 25px);"
         id="grid"
         class="ag-theme-balham"
         ref="grid"
@@ -11,8 +9,6 @@
         :row-data="rowData"
         :grid-options="gridOptions"
       ></ag-grid-vue>
-    </div>
-  </div>
 </template>
 
 <script>
