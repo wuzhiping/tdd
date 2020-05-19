@@ -20,7 +20,7 @@
     <script type="text/javascript" src="/build/common/base.js"></script>
     <script type="text/javascript" src="/build/common/vueEdit-babel.js"></script>
     <script type="text/javascript" src="/build/common/babel.min.js"></script>
-    <script src="/node_modules/regenerator-runtime/runtime.js"></script>
+    <script src="/node_modules/async/dist/async.min.js?v=1.5.2"></script>
 
     <script src="/node_modules/axios/dist/axios.min.js"></script>
     <script src="/node_modules/vue-router/dist/vue-router.min.js"></script>
@@ -199,23 +199,49 @@
                 this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
             },
         },
-        created: async function() {
-            const res = await axios.get('/oauth2/abc')
-            console.log(res)
-            const res2 = await axios.get('/oauth2/abc')
-            console.log(res2)
+        created: function() {
+              var that = this;
+              
+              async.waterfall([
+                function(callback) {
+                    setTimeout(function(){
+                        that.one = '1';
+                        that.two = '2';
+                        callback(null, that.one, that.two);
+                        $.Toast.warning("one","1")
+                    },1000)
+                },
+                function(arg1, arg2, callback) {
+                // arg1 now equals 'one' and arg2 now equals 'two'
+                    setTimeout(function(){
+                        that.three = arg1;
+                        that.four = arg2;
+                        that.five = '3';
+                        callback(null, 'three');
+                        $.Toast.warning("two","2")
+                    },1000)
+                   
+                },
+                function(arg1, callback) {
+                    setTimeout(function(){
+                        callback(null, 'done');
+                        $.Toast.warning("three","3")
+                    },1000)
+                    
+                }
+            ], function (err, result) {
+                if(err)
+                    console.log(err);
+                if(result)
+                    console.log(result);
+                // result now equals 'done'
+            });
 
-            var that = this;
             this.$router.beforeEach(function(to, from, next){
                 console.dir(from.path + " -> " + to.path)
                 that.$store.commit('reset');
                 next();
             })
-            // this.$router.beforeEach((to, from, next) => {
-            //     console.dir(from.path + " -> " + to.path)
-            //     this.$store.commit('reset');
-            //     next();
-            // });
         },
         mounted: function() {
             this.$router
