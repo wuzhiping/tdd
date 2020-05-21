@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript" src="https://a.feg.com.tw/agilebpm-ui/build/common/base.js"></script>
+  <script type="text/javascript" src="https://a.feg.com.tw/agilebpm-ui/build/common/vueEdit-babel.js"></script>
+</head>
+<body>
+  <div id="app">
+      <h1 @click="doSomthing()">{{msg}}</h1>
+	   <h1>{{msg}}</h1>
+  </div>
+</body>
+<script>
+     var app = new Vue({
+        el: '#app',
+        data: {
+		   msg:"A message"
+		},
+		methods: {
+			doSomthing(){
+			  Vue.baseService
+               .post('https://a.feg.com.tw/oauth2/abc',{})
+               .then((res) => this.msg = res.msg)
+               .catch((error) => console.error(error));
+			}
+		},
+		created() { },//created
+        mounted(){ }
+	});
+</script>
+</html>
