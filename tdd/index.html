@@ -39,6 +39,10 @@
 
     <script defer="defer" src="/assets/js/Lodop.w.js" onload="console.log('Lodop.js loaded.');"
         type="text/javascript"></script>
+    
+    <script defer="defer" src="/node_modules/mockjs/dist/mock.js" 
+        onload="Mock.setup({timeout: 1000 }); Mock.mock( 'http\:\/\/abc.com/xyz', {isOk:true} );"
+        type="text/javascript"></script>
 
     <!-- <script src="../node_modules/ag-grid-enterprise/dist/ag-grid-enterprise.min.noStyle.js"></script>
     <script src="../node_modules/ag-grid-vue/dist/ag-grid-vue.umd.min.js"></script>
@@ -129,6 +133,11 @@
         methods: {
             change() {
                 this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
+
+                axios.post("http\:\/\/abc.com/xyz", {} )
+                     .then(res=>{
+                        console.log('res=>',res);            
+                      });
             }
         },
         created: function () {
