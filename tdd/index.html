@@ -37,10 +37,14 @@
     <script src="/node_modules/iview/dist/locale/en-US.js"></script>
     <script src="/node_modules/iview/dist/locale/zh-TW.js"></script>
 
+    <script src="/node_modules/linq/linq.min.js"></script>
+    <script src="/node_modules/pouchdb/dist/pouchdb.min.js"></script>
+    <script src="/node_modules/pouchdb/dist/pouchdb.find.min.js"></script>
+
     <script defer="defer" src="/assets/js/Lodop.w.js" onload="console.log('Lodop.js loaded.');"
         type="text/javascript"></script>
-    
-    <script defer="defer" src="/node_modules/mockjs/dist/mock.js" 
+
+    <script defer="defer" src="/node_modules/mockjs/dist/mock.js"
         onload="Mock.setup({timeout: 1000 }); Mock.mock( 'http\:\/\/abc.com/xyz', {isOk:true} );"
         type="text/javascript"></script>
 
@@ -134,13 +138,74 @@
             change() {
                 this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
 
-                axios.post("http\:\/\/abc.com/xyz", {} )
-                     .then(res=>{
-                        console.log('res=>',res);            
-                      });
+                axios.post("http\:\/\/abc.com/xyz", {})
+                    .then(res => {
+                        console.log('res=>', res);
+                    });
             }
         },
         created: function () {
+
+            // PouchDB.debug.enable('*');
+            var db = new PouchDB('_MRO');
+            db.createIndex({
+                index: {
+                    fields: ['action'],
+                    name: 'indexAction'
+                }
+            }).then(function (res) { console.dir(res.result) });
+            // db.destroy(function (err, response) { });
+
+            db.replicate.from('http://ateam.apgusa.com/_MRO');
+
+            // console.dir(new Date())
+            // db.allDocs({ include_docs: true, attachments: true })
+            //     .then(function (data) {
+            //         console.dir(new Date())
+            //         console.dir(data);
+            //         var result = Enumerable.from(data.rows)
+            //             .select((val, i) => ({ value: val.doc._id, index: i }))
+            //             .toArray();
+            //         console.dir(result);
+            //         console.dir(new Date())
+            //     });
+            console.dir(new Date())
+            db.find({
+                selector: {
+                    // _id: { $gte: null },
+                    action: "GetManufacture"
+                },
+                limit: 1000
+            })
+                .then(function (data) {
+                    console.dir(new Date())
+                    var result = Enumerable.from(data.docs)
+                        .select((val, i) => ({ value: val._id, index: i }))
+                        .toArray();
+                    console.dir(result)
+                    console.dir(new Date())
+                });
+
+            /*/
+            var db = new PouchDB('dbname');
+            db.put({
+                _id: new Date(),
+                name: 'Shawn',
+                age: 69,
+                ver: 1
+            }).then(function () {
+                db.find({
+                    selector: {
+                        _id: { $gte: null },
+                        name: "Shawn"
+                    }
+                })
+                    .then(function (data) {
+                        console.dir(data.docs);
+                    });
+            });
+            /*/
+
             this.$store.commit('increment');
             this.$router.beforeEach((to, from, next) => {
                 next();
