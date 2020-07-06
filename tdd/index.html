@@ -87,6 +87,11 @@
             meta: { keepAlive: true },
             props: true
         },
+        {
+            path: '/login',
+            component: { template: '<div>LOGIN </div>' },
+            name: 'login',
+        },
         { path: '*', redirect: "/" }],
         scrollBehavior(to, from, savedPosition) {
             return { x: 0, y: 0 };
@@ -119,11 +124,11 @@
         el: '#app', i18n: i18n,
         store: new Vuex.Store({
             state: {
-                count: 0,
+                token: null,
             },
             mutations: {
-                increment(state) {
-                    state.count++
+                login(state, userInfo) {
+                    state.token = userInfo
                 }
             }
         }),
@@ -156,7 +161,30 @@
             }).then(function (res) { console.dir(res.result) });
             // db.destroy(function (err, response) { });
 
-            db.replicate.from('http://ateam.apgusa.com/_MRO');
+            db.sync('http://ateam.apgusa.com/_MRO', {
+                live: true,
+                retry: true
+            }).on('change', function (info) {
+                // handle change
+                console.dir("sync change")
+            }).on('paused', function (err) {
+                // replication paused (e.g. replication up to date, user went offline)
+                console.dir("sync paused")
+                if (err)
+                    console.dir(err);
+            }).on('active', function () {
+                // replicate resumed (e.g. new changes replicating, user went back online)
+                console.dir("sync active")
+            }).on('denied', function (err) {
+                // a document failed to replicate (e.g. due to permissions)
+                console.dir("sync denied")
+            }).on('complete', function (info) {
+                // handle complete
+                console.dir("sync complete")
+            }).on('error', function (err) {
+                // handle error
+                console.dir("sync error")
+            });
 
             // console.dir(new Date())
             // db.allDocs({ include_docs: true, attachments: true })
@@ -206,13 +234,17 @@
             });
             /*/
 
-            this.$store.commit('increment');
+            this.$store.commit('login', { uid: '041007' });
+            
             this.$router.beforeEach((to, from, next) => {
-                next();
+                if (this.$store.state.token || to.path === '/login')
+                    next();
+                else
+                    next({ path: "/login" });
             });
         },
         mounted: function () {
-            console.dir(this.$store.state.count);
+            console.dir(this.$store.state.token);
             this.$router
                 .push({ name: 'home', query: { r: (new Date()).getTime() } })
                 .catch(data => {
