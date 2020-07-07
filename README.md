@@ -24,3 +24,8 @@ http://localhost:8181
 
 ![Image text](https://github.com/wuzhiping/tdd/blob/master/ee24e528-44d6-495f-b93f-51b27eaca203.png)
 
+
+#nginx
+       proxy_set_header 'Access-Control-Allow-Origin' "*";
+       proxy_set_header 'Access-Control-Allow-Credentials' "true";
+

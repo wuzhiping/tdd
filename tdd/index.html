@@ -172,8 +172,10 @@
 
             db.sync(new PouchDB('http://ateam.apgusa.com/_MRO', {
                 fetch: function (url, opts) {
-                    // opts.headers.set('X-Some-Special-Header', 'foo');
-                    opts.credentials = false;
+                    // opts.headers.set('Access-Control-Allow-Credentials', 'true');
+                    // opts.headers.set('Access-Control-Allow-Origin', '*');
+                    // opts.mode = 'no-cors'; // no-cors
+                    // opts.credentials = false;
                     return PouchDB.fetch(url, opts);
                 }
             }), {
