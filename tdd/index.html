@@ -174,8 +174,8 @@
                 fetch: function (url, opts) {
                     // opts.headers.set('Access-Control-Allow-Credentials', 'true');
                     // opts.headers.set('Access-Control-Allow-Origin', '*');
-                    // opts.mode = 'no-cors'; // no-cors
-                    // opts.credentials = false;
+                    // opts.mode = 'cors'; // no-cors
+                    opts.credentials = true;
                     return PouchDB.fetch(url, opts);
                 }
             }), {
