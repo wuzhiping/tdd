@@ -186,10 +186,11 @@
                     // opts.headers.set('Access-Control-Allow-Credentials', 'true');
                     // opts.headers.set('Access-Control-Allow-Origin', '*');
                     // opts.mode = 'cors'; // no-cors
-                    opts.credentials = true;
+                    // opts.credentials = true;
                     return PouchDB.fetch(url, opts);
                 }
             }), {
+                batch_size: 500,
                 live: true,
                 retry: true
             }).on('change', function (info) {
