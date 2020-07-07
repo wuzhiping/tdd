@@ -59,7 +59,7 @@
         <div class="fe-toolbar">
             <i-button type="primary" shape="circle" icon="ios-search" @click="change"></i-button>
             <br>
-            <i-button v-if="IN('admin')" type="warning" loading onclick="$.Toast.success('batch',this.innerText);">
+            <i-button v-if="$IN('admin')" type="warning" loading onclick="$.Toast.success('batch',this.innerText);">
                 ....{{$store.state.token.uid}}</i-button>
         </div>
 
@@ -76,9 +76,9 @@
 
     axios.defaults.baseURL = 'https://a.feg.com.tw';
     axios.defaults.withCredentials = true;
-    axios.defaults.retry = 2;
-    axios.defaults.retryDelay = 2000;
-    console.dir(axios.defaults);
+    // axios.defaults.retry = 2;
+    // axios.defaults.retryDelay = 2000;
+    // console.dir(axios.defaults);
 
     const router = new VueRouter({
         routes: [{
@@ -100,7 +100,21 @@
     })
 
     Vue.locale = () => { };
-
+    //
+    // Vue.prototype.$eventBus = new Vue()
+    Vue.prototype.$API = {
+        F1:function(arg){
+            console.dir("F1");
+        },
+        F2:function(arg){
+            console.dir("F2");
+        }
+    }
+    //
+    Vue.prototype.$IN = function (role) {
+            return (this.$store.state.token || { roles: [] }).roles.indexOf(role) > -1;
+        }
+    //
     const messages = {
         en: Object.assign({
             demo: {
@@ -146,9 +160,6 @@
         },
         router: router,
         methods: {
-            IN(role) {
-                return (this.$store.state.token || { roles: [] }).roles.indexOf(role) > -1;
-            },
             change() {
                 this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
 

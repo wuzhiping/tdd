@@ -1,6 +1,6 @@
 <template>
   <div v-cloak>
-    <h1>{{$t("demo.message")}}</h1>
+    <h1 v-if="$IN('admin')">{{$t("demo.message")}}</h1>
     <form-create ref="form" v-model="model" :rule="rule" :option="option"></form-create>
   </div>
 </template>
@@ -61,6 +61,8 @@ module.exports = {
     this.$store.commit("error","请先保存表单"); 
   },
   mounted: function() {
+    this.$API.F1();this.$API.F2();
+
     for (var i = 0; i < 10; i++) {
       this.rule.push({
         type: "DatePicker",
