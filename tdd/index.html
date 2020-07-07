@@ -59,7 +59,7 @@
         <div class="fe-toolbar">
             <i-button type="primary" shape="circle" icon="ios-search" @click="change"></i-button>
             <br>
-            <i-button type="warning" loading onclick="$.Toast.success('batch',this.innerText);">loading....</i-button>
+            <i-button v-if="IN('admin')" type="warning" loading onclick="$.Toast.success('batch',this.innerText);">....{{$store.state.token.uid}}</i-button>
         </div>
 
         <div class="fe-content">
@@ -135,11 +135,19 @@
         components: {
             // AgGridVue: window["ag-grid-vue"].AgGridVue
         },
+        watch: {
+            "$store.state.token"() {
+                console.dir(this.$store.state);
+            }
+        },
         data: {
 
         },
         router: router,
         methods: {
+            IN(role){
+                return (this.$store.state.token || {roles:[]}).roles.indexOf(role) > -1;
+            },
             change() {
                 this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
 
@@ -233,9 +241,8 @@
                     });
             });
             /*/
+            this.$store.commit('login', { uid: '041007',roles:["admin","manager"] });
 
-            this.$store.commit('login', { uid: '041007' });
-            
             this.$router.beforeEach((to, from, next) => {
                 if (this.$store.state.token || to.path === '/login')
                     next();
