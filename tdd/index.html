@@ -59,7 +59,8 @@
         <div class="fe-toolbar">
             <i-button type="primary" shape="circle" icon="ios-search" @click="change"></i-button>
             <br>
-            <i-button v-if="IN('admin')" type="warning" loading onclick="$.Toast.success('batch',this.innerText);">....{{$store.state.token.uid}}</i-button>
+            <i-button v-if="IN('admin')" type="warning" loading onclick="$.Toast.success('batch',this.innerText);">
+                ....{{$store.state.token.uid}}</i-button>
         </div>
 
         <div class="fe-content">
@@ -145,8 +146,8 @@
         },
         router: router,
         methods: {
-            IN(role){
-                return (this.$store.state.token || {roles:[]}).roles.indexOf(role) > -1;
+            IN(role) {
+                return (this.$store.state.token || { roles: [] }).roles.indexOf(role) > -1;
             },
             change() {
                 this.$i18n.locale = (this.$i18n.locale == "en" ? "zh" : "en");
@@ -169,7 +170,13 @@
             }).then(function (res) { console.dir(res.result) });
             // db.destroy(function (err, response) { });
 
-            db.sync('http://ateam.apgusa.com/_MRO', {
+            db.sync(new PouchDB('http://ateam.apgusa.com/_MRO', {
+                fetch: function (url, opts) {
+                    // opts.headers.set('X-Some-Special-Header', 'foo');
+                    opts.credentials = false;
+                    return PouchDB.fetch(url, opts);
+                }
+            }), {
                 live: true,
                 retry: true
             }).on('change', function (info) {
@@ -241,7 +248,7 @@
                     });
             });
             /*/
-            this.$store.commit('login', { uid: '041007',roles:["admin","manager"] });
+            this.$store.commit('login', { uid: '041007', roles: ["admin", "manager"] });
 
             this.$router.beforeEach((to, from, next) => {
                 if (this.$store.state.token || to.path === '/login')
