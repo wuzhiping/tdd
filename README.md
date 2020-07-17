@@ -29,3 +29,4 @@ http://localhost:8181
        proxy_set_header 'Access-Control-Allow-Origin' "*";
        proxy_set_header 'Access-Control-Allow-Credentials' "true";
 
+![Sequence Diagram](https://github.com/wuzhiping/tdd/blob/master/sequence.png)
